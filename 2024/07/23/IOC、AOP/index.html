@@ -16,14 +16,17 @@
   <meta name="author" content="chengkx">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="1、ioc 控制反转 管理对象 也可以说是DI Dependency injection 依赖注入  开发模式 容器创建好对象—–&gt; 程序使用   ​	   程序不再负责对象的创建，而是直接使用IOC容器的对象 123456&lt;bean class&#x3D;&quot;spring.bean.Monster&quot; id&#x3D;&quot;monster&quot;&gt;        &lt;">
+<meta property="og:type" content="article">
 <meta property="og:title" content="IOC、AOP">
 <meta property="og:url" content="https://chengkx-ad.github.io/2024/07/23/IOC%E3%80%81AOP/index.html">
 <meta property="og:site_name" content="chengkx&#39;s blok">
+<meta property="og:description" content="1、ioc 控制反转 管理对象 也可以说是DI Dependency injection 依赖注入  开发模式 容器创建好对象—–&gt; 程序使用   ​	   程序不再负责对象的创建，而是直接使用IOC容器的对象 123456&lt;bean class&#x3D;&quot;spring.bean.Monster&quot; id&#x3D;&quot;monster&quot;&gt;        &lt;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-23T13:48:35.000Z">
-<meta property="article:modified_time" content="2024-07-23T13:48:35.707Z">
+<meta property="article:modified_time" content="2024-07-31T03:13:08.886Z">
 <meta property="article:author" content="chengkx">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -217,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          917 字
         
       </span>
     
@@ -228,7 +231,7 @@
         
         
         
-          1 分钟
+          8 分钟
         
       </span>
     
@@ -270,7 +273,45 @@
             
               <div class="markdown-body">
                 
-                
+                <p>1、ioc 控制反转 管理对象 也可以说是DI Dependency injection 依赖注入</p>
+<ul>
+<li><p>开发模式</p>
+<p>容器创建好对象—–&gt; 程序使用</p>
+</li>
+</ul>
+<p>​	   程序不再负责对象的创建，而是直接使用IOC容器的对象</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;spring.bean.Monster&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;monster&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;monsterId&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;01&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;成成成&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;skill&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;写代码&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br>每一组bean是一个对象<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>获取对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">get</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">ApplicationContext</span> <span class="hljs-variable">ioc</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathXmlApplicationContext</span>(<span class="hljs-string">&quot;springXml.xml&quot;</span>);<br><br>    <span class="hljs-type">Object</span> <span class="hljs-variable">monster01</span> <span class="hljs-operator">=</span> ioc.getBean(<span class="hljs-string">&quot;monster&quot;</span>); <span class="hljs-comment">// 注意这里的monster01的类型 并不是Monster 可以强转 也可以像下面的方法一样  </span><br>    System.out.println(monster01);<br><br>    <span class="hljs-comment">// 指定类型</span><br>    <span class="hljs-type">Monster</span> <span class="hljs-variable">monster</span> <span class="hljs-operator">=</span> ioc.getBean(<span class="hljs-string">&quot;monster&quot;</span>, Monster.class);<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>实现spring容器  创建bean对象  保存至ioc中  读取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> spring.bean.applicationContext;<br><br><span class="hljs-keyword">import</span> org.dom4j.Document;<br><span class="hljs-keyword">import</span> org.dom4j.DocumentException;<br><span class="hljs-keyword">import</span> org.dom4j.Element;<br><span class="hljs-keyword">import</span> org.dom4j.io.SAXReader;<br><span class="hljs-keyword">import</span> spring.bean.Monster;<br><br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.concurrent.ConcurrentHashMap;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Applicationcontext</span> &#123;<br><br>    <span class="hljs-keyword">private</span> ConcurrentHashMap&lt;String, Object&gt; ioc = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentHashMap</span>&lt;&gt;();<br><br>    <span class="hljs-comment">// Dom4j</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Applicationcontext</span><span class="hljs-params">(String iocXmlFile)</span> <span class="hljs-keyword">throws</span> DocumentException, ClassNotFoundException, InstantiationException, IllegalAccessException &#123;<br><br>        <span class="hljs-comment">// 类加载路径</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">path</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.getClass().getResource(<span class="hljs-string">&quot;/&quot;</span>).getPath();<br><br>        <span class="hljs-comment">// 获取解析器 读取xml文件</span><br>        <span class="hljs-type">SAXReader</span> <span class="hljs-variable">saxReader</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SAXReader</span>();<br>        <span class="hljs-type">Document</span> <span class="hljs-variable">document</span> <span class="hljs-operator">=</span> saxReader.read(path + iocXmlFile);<br>        <span class="hljs-comment">// 得到根节点  继而可以从根节点继续往下找</span><br>        <span class="hljs-type">Element</span> <span class="hljs-variable">rootElement</span> <span class="hljs-operator">=</span> document.getRootElement();<br><br>        <span class="hljs-comment">// 得到第一个bean</span><br>        <span class="hljs-type">Element</span> <span class="hljs-variable">bean</span> <span class="hljs-operator">=</span> (Element)rootElement.elements(<span class="hljs-string">&quot;bean&quot;</span>).get(<span class="hljs-number">0</span>);<br>        <span class="hljs-comment">// 获取这一组bean的id和class</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">id</span> <span class="hljs-operator">=</span> bean.attributeValue(<span class="hljs-string">&quot;id&quot;</span>);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">aClass</span> <span class="hljs-operator">=</span> bean.attributeValue(<span class="hljs-string">&quot;class&quot;</span>);<br><br>        System.out.println(id);<br>        System.out.println(aClass);<br><br>        <span class="hljs-comment">// 获取这一组的所有property</span><br>        List&lt;Element&gt; property = bean.elements(<span class="hljs-string">&quot;property&quot;</span>);<br><br>        <span class="hljs-comment">//从这一组property中获取每个属性的值</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">monsterID</span> <span class="hljs-operator">=</span> Integer.parseInt(property.get(<span class="hljs-number">0</span>).attributeValue(<span class="hljs-string">&quot;value&quot;</span>));<br>        <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> property.get(<span class="hljs-number">1</span>).attributeValue(<span class="hljs-string">&quot;value&quot;</span>);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">skill</span> <span class="hljs-operator">=</span> property.get(<span class="hljs-number">2</span>).attributeValue(<span class="hljs-string">&quot;value&quot;</span>);<br><br>        System.out.println(monsterID);<br>        System.out.println(name);<br>        System.out.println(skill);<br><br>        <span class="hljs-comment">// 通过反射创建bean实例，放入到ioc中</span><br>        Class&lt;?&gt; aClass1 = Class.forName(aClass);<br><br>        <span class="hljs-type">Monster</span> <span class="hljs-variable">o</span> <span class="hljs-operator">=</span> (Monster)aClass1.newInstance();<br><br>        o.setMonsterId(monsterID);<br>        o.setName(name);<br>        o.setSkill(skill);<br><br>        ioc.put(id, o);<br><br>    &#125;<br>    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">getBean</span><span class="hljs-params">(String id)</span> &#123;<br>        <span class="hljs-keyword">return</span> ioc.get(id);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>Spring管理bean-ioc</p>
+<p><strong>通过id获取bean（前面的示例）</strong></p>
+<p><strong>通过类型获取bean</strong></p>
+<p>note：按类型获取beans，在配置文件中，同一类的bean只能有一个 否则会抛出异常NoUniqueBeanDefinitionException</p>
+<p>应用场景：单例情况下会这么用  像是在某个线程下只需要一个对象实例</p>
+<p>在容器的配置文件中为对象赋值，底层是通过setter方法完成的，所以我们要提供setter</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">ClassPathXmlApplicationContext</span> <span class="hljs-variable">ioc</span><br>                <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassPathXmlApplicationContext</span>(<span class="hljs-string">&quot;springXml.xml&quot;</span>);<br><br>        <span class="hljs-type">Monster</span> <span class="hljs-variable">monster</span> <span class="hljs-operator">=</span> ioc.getBean(Monster.class);<br>        <span class="hljs-type">Monster2</span> <span class="hljs-variable">monster2</span> <span class="hljs-operator">=</span> ioc.getBean(Monster2.class);<br></code></pre></td></tr></table></figure>
+
+<p>​		<strong>通过构造器配置bean</strong></p>
+<p>​		constructor-arg标签可以指定使用构造器的参数</p>
+<p>​		index表示构造器的第几个参数</p>
+<p>​		type表示在这个构造器中的参数类型，在一个javabean中不可能有两组type完全相同的构造器</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--通过构造器获取bean--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;monster03&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;spring.bean.javabean01&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;西游记&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;0&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;白骨精&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;1&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;九阴白骨爪&quot;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;2&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br>    <span class="hljs-comment">&lt;!--通过type指定，因为在构造器中不可能存在同一组相同的类型--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;monster04&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;spring.bean.javabean01&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;西游记&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;java.lang.String&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;白骨精&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;java.lang.String&quot;</span>/&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;九阴白骨爪&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;java.lang.String&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>​		<strong>通过p名称空间配置bean</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;bean01&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;spring.bean.javabean01&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">p:movie</span>=<span class="hljs-string">&quot;西游记&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">p:name</span>=<span class="hljs-string">&quot;孙悟空&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">p:action</span>=<span class="hljs-string">&quot;筋斗云&quot;</span></span><br><span class="hljs-tag">    /&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>​		<strong>通过引用&#x2F;注入的方式 通过ref可以实现相互引用</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--在daoImpl中没有任何属性--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;dao&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;spring.bean.daoImpl&quot;</span>/&gt;</span><br>    <span class="hljs-comment">&lt;!--通过ref实现bean之间的相互引用--&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;service&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;spring.bean.serviceImpl&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;dao&quot;</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">&quot;dao&quot;</span>/&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -278,6 +319,13 @@
             <div>
               <div class="post-metas my-3">
   
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/" class="print-no-link">#java</a>
+      
+    </div>
   
 </div>
 
