@@ -9,7 +9,7 @@
     
     <title>
         
-            RPC |
+            OS |
         
         chengkx&#39;blog
     </title>
@@ -341,19 +341,12 @@
     <div class="post-page-container border-box">
         <div class="post-content-container border-box">
             
-                <div class="post-content-top border-box"
-                     style="height: 13.8rem"
-                >
-                    <div class="cover-post-title">
-                        RPC
-                    </div>
-                    <img class="post-cover" src="https://images2.alphacoders.com/133/1335809.png"
-                         onerror="this.style.display='none'"
-                    >
-                </div>
-            
 
-            <div class="post-content-bottom border-box has-cover">
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        OS
+                    </div>
                 
 
                 
@@ -380,12 +373,12 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2024-09-21 20:18:35</span>
+                <span class="datetime">2024-09-22 16:16:31</span>
             </span>
 
             <span class="meta-info-item post-update-date">
                 <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                <span class="datetime" data-updated="Sat Sep 21 2024 20:20:44 GMT+0800">2024-09-21 20:20:44</span>
+                <span class="datetime" data-updated="Sun Sep 22 2024 16:17:49 GMT+0800">2024-09-22 16:17:49</span>
             </span>
         
 
@@ -395,7 +388,7 @@
             <span class="post-tag meta-info-item border-box">
                 <ul class="post-tag-ul">
                     
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/Netty%E3%80%81zookeeper/">Netty、zookeeper</a></li>
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/os%E5%9F%BA%E7%A1%80/">os基础</a></li>
                         
                     
                 </ul>
@@ -416,51 +409,60 @@
                     </div>
                 
 
-                <div class="post-content keep-markdown-body code-block-unshrink">
+                <div class="post-content keep-markdown-body ">
                     
 
                     
-                         <h1 id="实现Dubbo框架"><a href="#实现Dubbo框架" class="headerlink" title="实现Dubbo框架"></a>实现Dubbo框架</h1><p>RPC框架的原理：</p>
-<p>服务端和客户端都可以访问到通用的接口，</p>
-<p>HelloService接口     但是只有服务端有这个接口的实现类，客户端只是调用这个接口的方式</p>
-<h1 id="🌱简化Rpc框架的实现"><a href="#🌱简化Rpc框架的实现" class="headerlink" title="🌱简化Rpc框架的实现"></a>🌱简化Rpc框架的实现</h1><p>📚定义传输格式：</p>
-<p>服务端需要什么信息，才能唯一确定客户端需要调用的接口呢?</p>
-<p>RpcRequest    定义调用方法的信息</p>
-<p>服务器调用这个方法以后，需要给客户端返回哪些信息呢？</p>
-<p>RpcResponse  请求号   响应状态码   </p>
-<p>通过网络传输告诉服务端我要调用这个接口，服务端接收到后，找到这个接口的实现类，并且执行，将执行的结果返回给客户端，作为客户端调用接口方法的返回值。</p>
-<p>📚问题：客户端怎么知道服务端的地址     如何告诉服务端自己要调用哪个接口    客户端怎么传递参数    </p>
-<p><strong>假设客户端已知服务器的ip</strong></p>
-<p>📚socket方法：</p>
-<p>客户端实现—–动态代理，目前用的JDK动态代理</p>
-<p>继承InvocationHandler接口实现  传递host和port指明服务器的位置  getProxy获取代理对象</p>
-<p>继承以后，我们需要重写invoke方法，指明代理对象的方法被调用时的动作。</p>
-<p>生成一个RpcRequest对象：Builder模式生成RpcRequest  ，RpcRequest的作用就是将一个对象发送过去，再接收返回的对象。</p>
-<p>实现过程：Java序列化，使用socket传输</p>
-<p>服务器端—-反射调用</p>
-<p>使用ServerSocket监听端口，循环接收链接请求，收到请求后，创建一个新线程（线程池）</p>
-<p>目前RpcServer只能注册一个接口，即对外提供一个接口的调用服务，添加Register方法，注册完一个服务后立刻开始监听下一个</p>
-<p>代码测试结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">服务器端：</span><br><span class="line">[main] INFO ccc.chengkx.rpc.transport.netty.registry.DefaultServiceRegistry - 向接口：[interface ccc.chengkx.rpc.api.HelloService], 注册服务：ccc.chengkx.test.HelloServiceImpl@421faab1</span><br><span class="line">[main] INFO ccc.chengkx.rpc.transport.netty.server.RpcServer - 服务器启动......</span><br><span class="line">[main] INFO ccc.chengkx.rpc.transport.netty.server.RpcServer - 消费者连接： /127.0.0.1：63985</span><br><span class="line">[pool-1-thread-1] INFO ccc.chengkx.test.HelloServiceImpl - 接收到消息：This is a message</span><br><span class="line">[pool-1-thread-1] INFO ccc.chengkx.rpc.transport.netty.server.RequestHandler - 服务：ccc.chengkx.rpc.api.HelloService 成功调用方法：hello</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">客户端：</span><br><span class="line">[main] INFO ccc.chengkx.rpc.entity.RpcRequest - 调用方法: ccc.chengkx.rpc.api.HelloService#hello</span><br><span class="line">impl1方法12</span><br></pre></td></tr></table></figure>
-
-<h1 id="🌱注册多个服务"><a href="#🌱注册多个服务" class="headerlink" title="🌱注册多个服务"></a>🌱注册多个服务</h1><p>📚在前面的工作中，我们设计了一个简单的RPC框架，在服务器测试中，注册完helloService服务后，服务器就自行启动了。意味着一个服务器只能注册一个服务。接下来，我们要将服务的注册和启动分离，使得服务器可以提供多个服务。</p>
-<p>服务注册表</p>
-<p>创建一个ServiceRegistry接口：getService获取服务信息、register注册服务信息</p>
-<p>实现该接口：DefaultServiceRegistry</p>
-<p>对于ConcurrentHashMap，存储的是服务名和提供服务的对象</p>
-<p>set集合，存储当前有哪些对象被注册</p>
-<p>📚一些其他处理：</p>
-<p>RpcServer  在创建RpcServer时要传入注册好服务的ServiceRegistry，服务的注册不再需要RpcServer处理，主负责启动</p>
-<p>RequestHandlerThread：处理线程，从ServiceRegistry获取到提供服务的对象</p>
-<p>RequestHandler：接到RpcRequest和提供服务的对象，反射调用</p>
-<h1 id="🌱Netty传输和通用序列化接口"><a href="#🌱Netty传输和通用序列化接口" class="headerlink" title="🌱Netty传输和通用序列化接口"></a>🌱Netty传输和通用序列化接口</h1><p>📚接下来，我会将传统的BIO方式转换为效率更高的NIO方式，但是不会使用java原生的NIO，而是Netty。以及，还会实现一系列通用的序列化接口，方便接下来的序列化工作。</p>
-<p>📚修改：将RpcClient和RpcServer修改为通用接口，socketClient和socketServer实现这两个接口</p>
-<p>📚自定义协议和编解码器</p>
-<p>CommonEncoder</p>
-<p>CommonDecoder</p>
-<p>NettyServer</p>
+                         <h4 id="🌱一些基础："><a href="#🌱一些基础：" class="headerlink" title="🌱一些基础："></a>🌱一些基础：</h4><p>OS是用户和计算机硬件之间的接口</p>
+<p>计算机系统中通常含有四种资源：处理机、存储器、I&#x2F;O设备、文件（程序和数据）</p>
+<h4 id="🌱OS基本特性"><a href="#🌱OS基本特性" class="headerlink" title="🌱OS基本特性"></a>🌱OS基本特性</h4><h5 id="📚并发"><a href="#📚并发" class="headerlink" title="📚并发"></a>📚并发</h5><p>并发、并行（同一时刻运行多个指令）</p>
+<p>并行：流水线或者多个处理器支持</p>
+<p>并发：操作系统通过引入进程和线程，使得程序能够并发运行</p>
+<h5 id="📚共享"><a href="#📚共享" class="headerlink" title="📚共享"></a>📚共享</h5><p>共享是指系统中的资源可以被多个并发进程共同使用</p>
+<p>有两种共享方式：互斥共享、同时共享</p>
+<p>互斥共享的资源称为临界资源，例如打印机，在同一时间内只允许一个进程访问，需要用同步机制来实现对临界资源的访问</p>
+<h5 id="📚虚拟"><a href="#📚虚拟" class="headerlink" title="📚虚拟"></a>📚虚拟</h5><p>时分复用技术、空分复用技术</p>
+<p>例如：多个进程能在同一个处理器上并发执行使用了时分复用技术，让每个进程轮流占用处理器，每次只执行一小个时间片并快速切换</p>
+<p><strong>时分复用：</strong>多道程序技术   提高资源利用率的根本原因在于：利用某设备为某一用户服务的空闲时间，又转去为其他用户服务，使设备能够得到充分的利用</p>
+<p>对于虚拟处理机：采用多道程序并发执行的方法，分时使用一个CPU，此时用户会感觉有多个cpu，但是物理意义上只有一个</p>
+<p>对于虚拟设备：将一台物理设备虚拟为逻辑上的多台设备，使多个用户在同一时段内访问同一台设备，即同时共享</p>
+<p><strong>空分复用：</strong>利用存储器的空闲空间分区域存放和运行其他多道程序，以此来提高内存的利用率</p>
+<h5 id="📚异步"><a href="#📚异步" class="headerlink" title="📚异步"></a>📚异步</h5><p>在多道程序环境下，系统允许多个程序同时运行，但是由于资源有限，进程的执行并不是一贯到底的，而是走走停停</p>
+<p>但是只要在OS中配置具有完善的进程同步机制，且运行环境相同，则作业经过多次运行，都会获得完全相同的结果</p>
+<h4 id="🌱OS基本功能"><a href="#🌱OS基本功能" class="headerlink" title="🌱OS基本功能"></a>🌱OS基本功能</h4><p>进程管理、内存管理、文件管理、设备管理</p>
+<p>向用户提供用户接口：1、用户接口（联机用户接口、脱机用户接口、图形用户接口）   2、程序接口</p>
+<h4 id="🌱系统调用"><a href="#🌱系统调用" class="headerlink" title="🌱系统调用"></a>🌱系统调用</h4><p>如果一个进程在用户态需要使用内核态的功能，就进行系统调用从而陷入内核，由操作系统代为完成</p>
+<h5 id="📚用户态和内核态"><a href="#📚用户态和内核态" class="headerlink" title="📚用户态和内核态"></a>📚用户态和内核态</h5><p>操作系统的两种运行状态</p>
+<p>内核态：处于内核态的 CPU 可以访问任意的数据，包括外围设备，比如网卡、硬盘等，处于内核态的 CPU 可以从一个程序切换到另外一个程序，并且占用 CPU 不会发生抢占情况，一般处于特权级 0 的状态我们称之为内核态。</p>
+<p>用户态：处于用户态的 CPU 只能访问受限资源，不能直接访问内存等硬件设备，不能直接访问内存等硬件设备，必须通过「系统调用」陷入到内核中，才能访问这些特权资源。</p>
+<h5 id="📚为什么要区分不同用户态和内核态？"><a href="#📚为什么要区分不同用户态和内核态？" class="headerlink" title="📚为什么要区分不同用户态和内核态？"></a>📚为什么要区分不同用户态和内核态？</h5><p>安全问题：CPU的某些指令非常危险，比如清空内存等</p>
+<p>所以普通的用户自行编码的应用程序只能使用那些不会造成危险的指令</p>
+<p>CPU提供了特权分级指令，根据特权指令又把进程的运行空间分为内核空间和用户空间</p>
+<h5 id="📚什么时候会从用户态陷入内核态？"><a href="#📚什么时候会从用户态陷入内核态？" class="headerlink" title="📚什么时候会从用户态陷入内核态？"></a>📚什么时候会从用户态陷入内核态？</h5><ul>
+<li><strong>系统调用</strong>：这是用户态进程<strong>主动</strong>要求切换到内核态的一种方式，用户态进程通过系统调用申请使用操作系统提供的服务程序完成工作。</li>
+<li><strong>异常</strong>：当CPU在执行运行在用户态下的程序时，发生了某些事先不可知的异常，这时会触发由当前运行进程切换到处理此异常的内核相关程序中，也就转到了内核态，比如缺页异常。</li>
+<li>外围设备的中断：当外围设备完成用户请求的操作后，会向CPU发出相应的中断信号，这时CPU会暂停执行下一条即将要执行的指令转而去执行与中断信号对应的处理程序，如果先前执行的指令是用户态下的程序，那么这个转换的过程自然也就发生了由用户态到内核态的切换。比如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后续操作等。</li>
+</ul>
+<h5 id="📚系统调用的过程"><a href="#📚系统调用的过程" class="headerlink" title="📚系统调用的过程"></a>📚系统调用的过程</h5><p>当用户需要访问硬件资源的时候，比如内存，硬盘等就需要系统调用陷入到内核中，才能访问这些特权资源</p>
+<p>系统调用返回系统会从内核态返回到用户态</p>
+<p>1、从用户态到内核态：当应用程序使用系统调用时，先将系统调用名称转换为系统调用号，接着将「系统调用号」和「请求参数」放到寄存器里，然后执行中断指令（int $0x80 指令），产生一个中断，CPU 陷入到内核态。<br>2、执行内核态逻辑：CPU 跳转到中断处理程序，先将当前用户态的寄存器（用户态的代码段、数据段、保存参数的寄存器）保存到内核数据结构，接着将系统调用号从寄存器里面取出来，最后根据系统调用号，在「系统调用表」中找到相应的系统调用函数进行调用，并将寄存器中保存的参数取出来，作为函数参数。<br>3、从内核态到用户态：执行完系统调用后，执行中断返回指令（iret 指令），将原来用户态保存的现场恢复回来，包含代码段、指令指针寄存器等。这时候 CPU 恢复到用户态，用户态进程恢复执行。</p>
+<p>在一次系统调用全过程中，会发生两次CPU上下文切换（CPU上下文指CPU寄存器和进程计数器）：</p>
+<ul>
+<li><p><strong>第一次</strong> CPU 上下文切换是从用户态切换到内核态：CPU 寄存器里原来用户态的指令位置，需要先保存起来。接着，为了执行内核态代码，CPU 寄存器需要更新为内核态指令的新位置。最后才是跳转到内核态运行内核任务。</p>
+</li>
+<li><p><strong>第二次</strong> CPU 上下文切换是从内核态切换到用户态： CPU 寄存器需要恢复原来保存的用户态，然后再切换到用户空间，继续运行进程。</p>
+</li>
+</ul>
+<h5 id="📚用户态和内核态是如何转换的？"><a href="#📚用户态和内核态是如何转换的？" class="headerlink" title="📚用户态和内核态是如何转换的？"></a>📚用户态和内核态是如何转换的？</h5><p>内核态与用户态的相互切换，其中最重要的一个步骤就是<strong>用户栈和内核栈的切换</strong>。</p>
+<p>用户栈到内核栈：</p>
+<p>1、执行中断指令（int $0x80 指令），中断发生时，CPU 去一个特定的结构（比如 TSS）中，获取该进程的内核栈的地址信息，也就是内核栈的段选择子和栈顶指针（这两个东西是描述内核栈在内存的哪个地址空间），并分别送入 ss 寄存器和 rsp 寄存器，这时候 CPU 就指向了该进程的内核栈的栈顶位置了，这就完成了用户态到内核态的一次栈的切换。<br>2、然后，IP寄存器（指令指针寄存器）跳入中断服务程序开始执行，中断服务程序会把用户态的所有寄存器压入到内核栈中，</p>
+<p>内核栈到用户栈：</p>
+<p>当中断结束时，中断服务程序会从内核栈里将cpu寄存器的值全部恢复，最后再执行iret指令</p>
+<p>当ss3和rsp3都弹出栈时将这两个值分别送到ss和rsp寄存器中，此时cpu就指向了该进程的用户栈的栈顶位置了，此时已经完成了一次内核栈到用户栈的切换</p>
+<p>内核栈的ss0和rsp0也会保存到前面所说的CPU中的一个特殊结构中，方便下次使用</p>
+<h4 id="🌱大内核和微内核"><a href="#🌱大内核和微内核" class="headerlink" title="🌱大内核和微内核"></a>🌱大内核和微内核</h4><h5 id="📚大内核"><a href="#📚大内核" class="headerlink" title="📚大内核"></a>📚大内核</h5><p>📚微内核</p>
+<h4 id="🌱中断"><a href="#🌱中断" class="headerlink" title="🌱中断"></a>🌱中断</h4><h5 id="📚外中断"><a href="#📚外中断" class="headerlink" title="📚外中断"></a>📚外中断</h5><h5 id="📚异常"><a href="#📚异常" class="headerlink" title="📚异常"></a>📚异常</h5><h5 id="📚陷入"><a href="#📚陷入" class="headerlink" title="📚陷入"></a>📚陷入</h5><h4 id="🌱进程管理"><a href="#🌱进程管理" class="headerlink" title="🌱进程管理"></a>🌱进程管理</h4><h5 id="📚进程"><a href="#📚进程" class="headerlink" title="📚进程"></a>📚进程</h5><p>进程是资源分配的基本单位</p>
+<p>进程控制块（PCB）描述进程的基本信息和运行状态，所谓的创建进程和撤销进程，都是指对PCB操作</p>
 
                     
                 </div>
@@ -471,11 +473,11 @@
     <div class="copyright-info-content border-box">
         <div class="copyright-info-top border-box">
             <div class="copyright-post-title border-box text-ellipsis">
-                RPC
+                OS
             </div>
 
             <div class="copyright-post-link border-box text-ellipsis">
-                2024/09/21/RPC/
+                2024/09/22/OS/
             </div>
         </div>
 
@@ -491,7 +493,7 @@
                 <div class="type">
                     发布于
                 </div>
-                <div class="content">2024-09-21 20:18</div>
+                <div class="content">2024-09-22 16:16</div>
             </div>
 
 
@@ -527,7 +529,7 @@
                             <ul class="post-tags-box border-box">
                                 
                                     <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/Netty%E3%80%81zookeeper/">Netty、zookeeper</a>
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/os%E5%9F%BA%E7%A1%80/">os基础</a>
                                     </li>
                                 
                             </ul>
@@ -543,31 +545,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2024/09/22/OS/"
-                                   title="OS"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">OS</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2024/09/21/hello-world/"
-                                   title="Hello World"
+                                   href="/2024/09/21/RPC/"
+                                   title="RPC"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">Hello World</span>
+                                        <span class="post-nav-title-item text-ellipsis">RPC</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
@@ -595,7 +581,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0Dubbo%E6%A1%86%E6%9E%B6"><span class="nav-text">实现Dubbo框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%F0%9F%8C%B1%E7%AE%80%E5%8C%96Rpc%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">🌱简化Rpc框架的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%F0%9F%8C%B1%E6%B3%A8%E5%86%8C%E5%A4%9A%E4%B8%AA%E6%9C%8D%E5%8A%A1"><span class="nav-text">🌱注册多个服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%F0%9F%8C%B1Netty%E4%BC%A0%E8%BE%93%E5%92%8C%E9%80%9A%E7%94%A8%E5%BA%8F%E5%88%97%E5%8C%96%E6%8E%A5%E5%8F%A3"><span class="nav-text">🌱Netty传输和通用序列化接口</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%EF%BC%9A"><span class="nav-text">🌱一些基础：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1OS%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7"><span class="nav-text">🌱OS基本特性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%B9%B6%E5%8F%91"><span class="nav-text">📚并发</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%85%B1%E4%BA%AB"><span class="nav-text">📚共享</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E8%99%9A%E6%8B%9F"><span class="nav-text">📚虚拟</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%BC%82%E6%AD%A5"><span class="nav-text">📚异步</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1OS%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-text">🌱OS基本功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-text">🌱系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81"><span class="nav-text">📚用户态和内核态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8C%BA%E5%88%86%E4%B8%8D%E5%90%8C%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%EF%BC%9F"><span class="nav-text">📚为什么要区分不同用户态和内核态？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E4%BB%8E%E7%94%A8%E6%88%B7%E6%80%81%E9%99%B7%E5%85%A5%E5%86%85%E6%A0%B8%E6%80%81%EF%BC%9F"><span class="nav-text">📚什么时候会从用户态陷入内核态？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-text">📚系统调用的过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E6%98%AF%E5%A6%82%E4%BD%95%E8%BD%AC%E6%8D%A2%E7%9A%84%EF%BC%9F"><span class="nav-text">📚用户态和内核态是如何转换的？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E5%A4%A7%E5%86%85%E6%A0%B8%E5%92%8C%E5%BE%AE%E5%86%85%E6%A0%B8"><span class="nav-text">🌱大内核和微内核</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%A4%A7%E5%86%85%E6%A0%B8"><span class="nav-text">📚大内核</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E4%B8%AD%E6%96%AD"><span class="nav-text">🌱中断</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%A4%96%E4%B8%AD%E6%96%AD"><span class="nav-text">📚外中断</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%BC%82%E5%B8%B8"><span class="nav-text">📚异常</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E9%99%B7%E5%85%A5"><span class="nav-text">📚陷入</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">🌱进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E8%BF%9B%E7%A8%8B"><span class="nav-text">📚进程</span></a></li></ol></li></ol>
     </div>
 </div>
 
@@ -726,7 +712,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0Dubbo%E6%A1%86%E6%9E%B6"><span class="nav-text">实现Dubbo框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%F0%9F%8C%B1%E7%AE%80%E5%8C%96Rpc%E6%A1%86%E6%9E%B6%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-text">🌱简化Rpc框架的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%F0%9F%8C%B1%E6%B3%A8%E5%86%8C%E5%A4%9A%E4%B8%AA%E6%9C%8D%E5%8A%A1"><span class="nav-text">🌱注册多个服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%F0%9F%8C%B1Netty%E4%BC%A0%E8%BE%93%E5%92%8C%E9%80%9A%E7%94%A8%E5%BA%8F%E5%88%97%E5%8C%96%E6%8E%A5%E5%8F%A3"><span class="nav-text">🌱Netty传输和通用序列化接口</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E4%B8%80%E4%BA%9B%E5%9F%BA%E7%A1%80%EF%BC%9A"><span class="nav-text">🌱一些基础：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1OS%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7"><span class="nav-text">🌱OS基本特性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%B9%B6%E5%8F%91"><span class="nav-text">📚并发</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%85%B1%E4%BA%AB"><span class="nav-text">📚共享</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E8%99%9A%E6%8B%9F"><span class="nav-text">📚虚拟</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%BC%82%E6%AD%A5"><span class="nav-text">📚异步</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1OS%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="nav-text">🌱OS基本功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="nav-text">🌱系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81"><span class="nav-text">📚用户态和内核态</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%8C%BA%E5%88%86%E4%B8%8D%E5%90%8C%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%EF%BC%9F"><span class="nav-text">📚为什么要区分不同用户态和内核态？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BC%9A%E4%BB%8E%E7%94%A8%E6%88%B7%E6%80%81%E9%99%B7%E5%85%A5%E5%86%85%E6%A0%B8%E6%80%81%EF%BC%9F"><span class="nav-text">📚什么时候会从用户态陷入内核态？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-text">📚系统调用的过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E6%98%AF%E5%A6%82%E4%BD%95%E8%BD%AC%E6%8D%A2%E7%9A%84%EF%BC%9F"><span class="nav-text">📚用户态和内核态是如何转换的？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E5%A4%A7%E5%86%85%E6%A0%B8%E5%92%8C%E5%BE%AE%E5%86%85%E6%A0%B8"><span class="nav-text">🌱大内核和微内核</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%A4%A7%E5%86%85%E6%A0%B8"><span class="nav-text">📚大内核</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E4%B8%AD%E6%96%AD"><span class="nav-text">🌱中断</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%A4%96%E4%B8%AD%E6%96%AD"><span class="nav-text">📚外中断</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E5%BC%82%E5%B8%B8"><span class="nav-text">📚异常</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E9%99%B7%E5%85%A5"><span class="nav-text">📚陷入</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">🌱进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%93%9A%E8%BF%9B%E7%A8%8B"><span class="nav-text">📚进程</span></a></li></ol></li></ol>
     </div>
 </div>
 
