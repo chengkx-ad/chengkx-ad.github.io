@@ -378,7 +378,7 @@
 
             <span class="meta-info-item post-update-date">
                 <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                <span class="datetime" data-updated="Fri Sep 27 2024 16:08:17 GMT+0800">2024-09-27 16:08:17</span>
+                <span class="datetime" data-updated="Sun Sep 29 2024 21:30:35 GMT+0800">2024-09-29 21:30:35</span>
             </span>
         
 
@@ -413,24 +413,19 @@
                     
 
                     
-                         <h4 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h4><p>“正射”—-直接使用某个类  之后使用类的对象进行操作</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Writer</span> <span class="variable">writer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Writer</span>();</span><br><span class="line">writer.setName(<span class="string">&quot;沉默王二&quot;</span>);</span><br></pre></td></tr></table></figure>
+                         <h4 id="🌱反射"><a href="#🌱反射" class="headerlink" title="🌱反射"></a>🌱反射</h4><h5 id="🐇“正射”—-直接使用某个类-之后使用类的对象进行操作"><a href="#🐇“正射”—-直接使用某个类-之后使用类的对象进行操作" class="headerlink" title="🐇“正射”—-直接使用某个类  之后使用类的对象进行操作"></a>🐇“正射”—-直接使用某个类  之后使用类的对象进行操作</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Writer</span> <span class="variable">writer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Writer</span>();</span><br><span class="line">writer.setName(<span class="string">&quot;沉默王二&quot;</span>);</span><br></pre></td></tr></table></figure>
 
-<p>反射</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;com.itwanger.s39.Writer&quot;</span>);</span><br><span class="line"><span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> clazz.getMethod(<span class="string">&quot;setName&quot;</span>, String.class);</span><br><span class="line"><span class="type">Constructor</span> <span class="variable">constructor</span> <span class="operator">=</span> clazz.getConstructor();</span><br><span class="line"><span class="type">Object</span> <span class="variable">object</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line">method.invoke(object,<span class="string">&quot;沉默王二&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="🐇反射"><a href="#🐇反射" class="headerlink" title="🐇反射"></a>🐇反射</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;com.itwanger.s39.Writer&quot;</span>);</span><br><span class="line"><span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> clazz.getMethod(<span class="string">&quot;setName&quot;</span>, String.class);</span><br><span class="line"><span class="type">Constructor</span> <span class="variable">constructor</span> <span class="operator">=</span> clazz.getConstructor();</span><br><span class="line"><span class="type">Object</span> <span class="variable">object</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line">method.invoke(object,<span class="string">&quot;沉默王二&quot;</span>);</span><br></pre></td></tr></table></figure>
 
-<p>反射的缺点主要有两个：</p>
-<p>破坏封装：由于反射允许访问私有字段和私有方法，所以可能会破坏封装而导致安全问题</p>
+<h5 id="🐇反射的缺点主要有两个："><a href="#🐇反射的缺点主要有两个：" class="headerlink" title="🐇反射的缺点主要有两个："></a>🐇反射的缺点主要有两个：</h5><p>破坏封装：由于反射允许访问私有字段和私有方法，所以可能会破坏封装而导致安全问题</p>
 <p>性能开销：由于反射涉及到动态解析，因此无法执行java虚拟机优化，反射写法较为复杂，在一些敏感的程序中不要写</p>
-<p>反射的主要应用场景：</p>
-<p>开发通用框架：例如spring</p>
+<h5 id="🐇反射的主要应用场景："><a href="#🐇反射的主要应用场景：" class="headerlink" title="🐇反射的主要应用场景："></a>🐇反射的主要应用场景：</h5><p>开发通用框架：例如spring</p>
 <p>动态代理</p>
 <p>注解</p>
 <p>例子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReflectionDemo1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException &#123;</span><br><span class="line">        <span class="type">Writer</span> <span class="variable">writer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Writer</span>();</span><br><span class="line">        writer.setName(<span class="string">&quot;沉默王二&quot;</span>);</span><br><span class="line">        System.out.println(writer.getName());</span><br><span class="line"></span><br><span class="line">        <span class="type">Class</span> <span class="variable">clazz</span> <span class="operator">=</span> Class.forName(<span class="string">&quot;com.itwanger.s39.Writer&quot;</span>);</span><br><span class="line">        <span class="type">Constructor</span> <span class="variable">constructor</span> <span class="operator">=</span> clazz.getConstructor();</span><br><span class="line">        <span class="type">Object</span> <span class="variable">object</span> <span class="operator">=</span> constructor.newInstance();</span><br><span class="line"></span><br><span class="line">        <span class="type">Method</span> <span class="variable">setNameMethod</span> <span class="operator">=</span> clazz.getMethod(<span class="string">&quot;setName&quot;</span>, String.class);</span><br><span class="line">        setNameMethod.invoke(object, <span class="string">&quot;沉默王二&quot;</span>);</span><br><span class="line">        <span class="type">Method</span> <span class="variable">getNameMethod</span> <span class="operator">=</span> clazz.getMethod(<span class="string">&quot;getName&quot;</span>);</span><br><span class="line">        System.out.println(getNameMethod.invoke(object));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>反射过程：</p>
-<p>获取反射类的Class对象</p>
+<h5 id="🐇反射过程："><a href="#🐇反射过程：" class="headerlink" title="🐇反射过程："></a>🐇反射过程：</h5><p>获取反射类的Class对象</p>
 <p>在java中，Class对象是一种特殊的对象，他代表了程序中的类和接口</p>
 <p>java中的每个类型（包括类、接口、数据及基础类型）都在JVM中有唯一一个Class对象与之对应，该Class对象在JVM加载类时创建，由JVM自动完成</p>
 <p>Class 对象中包含了与类相关的很多信息，如类的名称、类的父类、类实现的接口、类的构造方法、类的方法、类的字段等等。这些信息通常被称为元数据（metadata）。</p>
@@ -448,8 +443,10 @@
 <p>通过invoke方法执行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setNameMethod.invoke(object, &quot;沉默王二&quot;);</span><br><span class="line">getNameMethod.invoke(object)</span><br></pre></td></tr></table></figure>
 
-<h4 id="理解反射"><a href="#理解反射" class="headerlink" title="理解反射"></a>理解反射</h4><p>要想使用反射，首先需要获得反射类的 Class 对象，每一个类，不管它最终生成了多少个对象，这些对象只会对应一个 Class 对象，这个 Class 对象是由 Java 虚拟机生成的，由它来获悉整个类的结构信息。</p>
+<h4 id="🌱理解反射"><a href="#🌱理解反射" class="headerlink" title="🌱理解反射"></a>🌱理解反射</h4><p>要想使用反射，首先需要获得反射类的 Class 对象，每一个类，不管它最终生成了多少个对象，这些对象只会对应一个 Class 对象，这个 Class 对象是由 Java 虚拟机生成的，由它来获悉整个类的结构信息。</p>
 <p>也就是说，<code>java.lang.Class</code> 是所有反射 API 的入口。</p>
+<h4 id="🌱Netty"><a href="#🌱Netty" class="headerlink" title="🌱Netty"></a>🌱Netty</h4><p>🐇</p>
+<p>​																																																														</p>
 
                     
                 </div>
@@ -584,7 +581,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84"><span class="nav-text">反射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84"><span class="nav-text">理解反射</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E5%8F%8D%E5%B0%84"><span class="nav-text">🌱反射</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E2%80%9C%E6%AD%A3%E5%B0%84%E2%80%9D%E2%80%94-%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E6%9F%90%E4%B8%AA%E7%B1%BB-%E4%B9%8B%E5%90%8E%E4%BD%BF%E7%94%A8%E7%B1%BB%E7%9A%84%E5%AF%B9%E8%B1%A1%E8%BF%9B%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="nav-text">🐇“正射”—-直接使用某个类  之后使用类的对象进行操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84"><span class="nav-text">🐇反射</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84%E7%9A%84%E7%BC%BA%E7%82%B9%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%EF%BC%9A"><span class="nav-text">🐇反射的缺点主要有两个：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84%E7%9A%84%E4%B8%BB%E8%A6%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="nav-text">🐇反射的主要应用场景：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-text">🐇反射过程：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84"><span class="nav-text">🌱理解反射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1Netty"><span class="nav-text">🌱Netty</span></a></li></ol>
     </div>
 </div>
 
@@ -715,7 +712,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84"><span class="nav-text">反射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84"><span class="nav-text">理解反射</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E5%8F%8D%E5%B0%84"><span class="nav-text">🌱反射</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E2%80%9C%E6%AD%A3%E5%B0%84%E2%80%9D%E2%80%94-%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E6%9F%90%E4%B8%AA%E7%B1%BB-%E4%B9%8B%E5%90%8E%E4%BD%BF%E7%94%A8%E7%B1%BB%E7%9A%84%E5%AF%B9%E8%B1%A1%E8%BF%9B%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="nav-text">🐇“正射”—-直接使用某个类  之后使用类的对象进行操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84"><span class="nav-text">🐇反射</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84%E7%9A%84%E7%BC%BA%E7%82%B9%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%EF%BC%9A"><span class="nav-text">🐇反射的缺点主要有两个：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84%E7%9A%84%E4%B8%BB%E8%A6%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="nav-text">🐇反射的主要应用场景：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%F0%9F%90%87%E5%8F%8D%E5%B0%84%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-text">🐇反射过程：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1%E7%90%86%E8%A7%A3%E5%8F%8D%E5%B0%84"><span class="nav-text">🌱理解反射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%F0%9F%8C%B1Netty"><span class="nav-text">🌱Netty</span></a></li></ol>
     </div>
 </div>
 
