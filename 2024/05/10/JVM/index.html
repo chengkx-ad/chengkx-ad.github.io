@@ -9,7 +9,7 @@
     
     <title>
         
-            SQL |
+            JVM |
         
         chengkx&#39;blog
     </title>
@@ -345,7 +345,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        SQL
+                        JVM
                     </div>
                 
 
@@ -373,26 +373,17 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2021-09-24 20:22:45</span>
+                <span class="datetime">2024-05-10 15:44:53</span>
             </span>
 
             <span class="meta-info-item post-update-date">
                 <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                <span class="datetime" data-updated="Thu Oct 17 2024 17:41:00 GMT+0800">2024-10-17 17:41:00</span>
+                <span class="datetime" data-updated="Thu Oct 17 2024 17:36:43 GMT+0800">2024-10-17 17:36:43</span>
             </span>
         
 
         
 
-        
-            <span class="post-tag meta-info-item border-box">
-                <ul class="post-tag-ul">
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></li>
-                        
-                    
-                </ul>
-            </span>
         
 
         
@@ -413,7 +404,103 @@
                     
 
                     
-                         <p>SQL优化方案</p>
+                         <h4 id="一、谈一谈类加载机制？"><a href="#一、谈一谈类加载机制？" class="headerlink" title="一、谈一谈类加载机制？"></a>一、谈一谈类加载机制？</h4><h5 id="1、什么时候触发类加载机制？"><a href="#1、什么时候触发类加载机制？" class="headerlink" title="1、什么时候触发类加载机制？"></a>1、什么时候触发类加载机制？</h5><p>（1）遇到new、getstatic、putstatic或invokestatic这4条字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。</p>
+<p>上面四条指令的java代码场景：使用new关键字实例化对象的时候、读取或设置一个类的静态字段（被final修饰、已在编译期把结果放入常量池的静态字段除外）的时候，以及调用一个类的静态方法的时候。</p>
+<p>（2）使用java.lang.reflect包的方法对类进行反射调用的时候，如果类没有进行过初始化，则需要先触发其初始化。</p>
+<p>（3）当初始化一个类的时候，发现其父类没有初始化，需要先初始化父类</p>
+<p>（4）当使用JDK 1.7的动态语言支持时，如果一个java.lang.invoke.MethodHandle实例最后的解析结果REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行过初始化，则需要先触发其初始化。</p>
+<h5 id="2、类加载过程"><a href="#2、类加载过程" class="headerlink" title="2、类加载过程"></a>2、类加载过程</h5><p>（1）类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载-验证-准备-解析-初始化-使用-卸载</p>
+<p>其中验证、准备、卸载三个部分统称为连接。</p>
+<p>（2）加载</p>
+<p>通过双亲委派机制进行类的加载</p>
+<p>在加载过程中，虚拟机完成以下三件事：</p>
+<ol>
+<li><p>通过一个类的全限定名来获取定义此类的二进制字节流。</p>
+</li>
+<li><p>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</p>
+</li>
+<li><p>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口。</p>
+</li>
+</ol>
+<p>（3）验证</p>
+<p>为了确保Class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。</p>
+<p><strong>验证内容：</strong></p>
+<p><strong>文件格式验证。</strong>第一阶段要验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理。</p>
+<p><strong>元数据验证</strong></p>
+<p><strong>字节码验证</strong></p>
+<p><strong>符号引用验证</strong></p>
+<p>（4）准备</p>
+<p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配。这个阶段中有两个容易产生混淆的概念需要强调一下，首先，这时候进行内存分配的仅包括类变量（被static修饰的变量），而不包括实例变量，实例变量将会在对象实例化时随着对象一起分配在Java堆中。其次，这里所说的初始值“通常情况”下是数据类型的零值，假设一个类变量的定义为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> <span class="number">123</span>;	</span><br></pre></td></tr></table></figure>
+
+<p>那变量value在准备阶段过后的初始值为0而不是123，因为这时候尚未开始执行任何Java方法。</p>
+<p>（5）解析</p>
+<p>解析是虚拟机将常量池内的符号引用替换为直接引用的过程</p>
+<ul>
+<li>符号引用（Symbolic References）：符号引用以一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。</li>
+<li>直接引用（Direct References）：直接引用可以是直接指向目标的指针、相对偏移量或是一个能间接定位到目标的句柄。</li>
+</ul>
+<p>解析主要包括：</p>
+<ol>
+<li>类或接口的解析。</li>
+<li>字段解析</li>
+<li>类方法解析</li>
+<li>接口方法解析</li>
+</ol>
+<p>（6）初始化</p>
+<p>类初始化阶段是类加载过程的最后一步，前面的类加载过程中，除了在加载阶段用户应用程序可以通过自定义类加载器参与之外，其余动作完全由虚拟机主导和控制。<strong>到了初始化阶段，才真正开始执行类中定义的Java程序代码（或者说是字节码）。</strong>初始化阶段是执行类构造器<clinit>()方法的过程。</clinit></p>
+<h5 id="3、类加载器"><a href="#3、类加载器" class="headerlink" title="3、类加载器"></a>3、类加载器</h5><p>把类加载阶段中的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己决定如何去获取所需要的类。实现这个动作的代码模块称为“类加载器”。对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在Java虚拟机中的唯一性，每一个类加载器，都拥有一个独立的类名称空间。</p>
+<p>（1）双亲委派模型</p>
+<p>从虚拟机的角度看，类加载器分为：</p>
+<p>只存在两种不同的类加载器：一种是启动类加载器（Bootstrap ClassLoader），这个类加载器使用C++语言实现，是虚拟机自身的一部分；另一种就是所有其他的类加载器，这些类加载器都由Java语言实现，独立于虚拟机外部，并且全都继承自抽象类java.lang.ClassLoader。</p>
+<p>从开发人员的角度，类加载器分为：</p>
+<p><strong>启动类加载器</strong>（Bootstrap ClassLoader）：负责将存放在<JAVA_HOME>\lib目录中的，或者被-Xbootclasspath参数所指定的路径中的，并且是虚拟机识别的（仅按照文件名识别，如rt.jar，名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。<br><strong>扩展类加载器</strong>（Extension ClassLoader）：这个加载器sun.misc.Launcher$ExtClassLoader实现，它负责加载<JAVA_HOME>\lib\ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。<br><strong>应用程序类加载器</strong>（Application ClassLoader）：这个类加载器由sun.misc.Launcher$App-ClassLoader实现。由于这个类加载器是ClassLoader中的getSystemClassLoader()方法的返回值，所以一般也称它为系统类加载器。它负责加载用户类路径（ClassPath）上所指定的类库，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</JAVA_HOME></JAVA_HOME></p>
+<p>双亲委派模型的工作过程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个加载请求（它的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去加载。</p>
+<p>实现双亲委派的代码都集中在**java.lang.ClassLoader的loadClass()**方法之中</p>
+<p>（2）破坏双亲委派机制</p>
+<p><strong>SPI机制</strong>：线程上下文类加载器。这个类加载器可以通过java.lang.Thread类的setContextClassLoaser()方法进行设置，如果创建线程时还未设置，它将会从父线程中继承一个，如果在应用程序的全局范围内都没有设置过的话，那这个类加载器默认就是应用程序类加载器。有了线程上下文类加载器，就可以做一些“舞弊”的事情了，JNDI服务使用这个线程上下文类加载器去加载所需要的SPI代码，也就是父类加载器请求子类加载器去完成类加载的动作，这种行为实际上就是打通了双亲委派模型的层次结构来逆向使用类加载器，实际上已经违背了双亲委派模型的一般性原则，但这也是无可奈何的事情。Java中所有涉及SPI的加载动作基本上都采用这种方式，例如JNDI、JDBC、JCE、JAXB和JBI等。<br><strong>依赖冲突</strong>：在maven工程中，出现依赖冲突问题。抛出 NoSuchMethodException 异常。例如：业务依赖消息中间件和微服务中间件，如果消息中间件和微服务中间件依赖的fastjson版本不一样，一个要2.0，一个要3.0. 那么最终业务用的是fastjson1.0版本。	</p>
+<p><strong>代码热替换</strong></p>
+<p><strong>tomcat中打破双亲委派机制</strong></p>
+<h4 id="二、java虚拟机内存结构"><a href="#二、java虚拟机内存结构" class="headerlink" title="二、java虚拟机内存结构"></a>二、java虚拟机内存结构</h4><p>JAVA 程序在运行的过程中会把他管理的内存划分为若干个不同的数据区域，<strong>每一块儿的数据区域所负责的功能都是不同的，他们也有不同的创建时间和销毁时间</strong>。紫色区域代表是线程共享的区域。</p>
+<h5 id="1、程序计数器"><a href="#1、程序计数器" class="headerlink" title="1、程序计数器"></a>1、程序计数器</h5><p>程序计数器是<strong>程序控制流的指示器，循环，跳转，异常处理，线程的恢复等工作都需要依赖程序计数器去完成</strong>。程序计数器是<strong>线程私有</strong>的，它的<strong>生命周期是和线程保持一致</strong>的，我们知道，N 个核数的 CPU 在同一时刻，最多有 N个线程同时运行，在我们真实的使用过程中可能会创建很多线程，JVM 的多线程其实是通过线程轮流切换，分配处理器执行时间来实现的。既然涉及的线程切换，所以每条线程必须有一个独立的程序计数器。</p>
+<h5 id="2、虚拟机栈"><a href="#2、虚拟机栈" class="headerlink" title="2、虚拟机栈"></a>2、虚拟机栈</h5><p>虚拟机栈，其描述的就是线程内存模型，<strong>也可以称作线程栈</strong>，也是每个<strong>线程私有</strong>的，<strong>生命周期与线程保持一致</strong>。在每个方法执行的时候，jvm 都会同步创建一个栈帧去存储局部变量表，操作数栈，动态连接，方法出口等信息。一个方法的生命周期就贯彻了一个栈帧从入栈到出栈的全部过程。</p>
+<p>每个线程运行时所需要的内存，就叫虚拟机栈</p>
+<p>每个栈由多个栈帧组成，对应着每次调用方法所占用的内存。</p>
+<p>每个栈只有一个活动栈帧，对应目前正在运行的方法，在栈顶位置，运行结束就出栈</p>
+<p>上面说的栈就是线程运行需要的内存。</p>
+<p>问题：</p>
+<p>1、垃圾回收是否涉及栈内存？</p>
+<p>不涉及，每次方法结束时，栈帧就出栈，立刻就会回收，不需要等待垃圾回收。垃圾回收是针对堆内存中的对象的。</p>
+<p>2、栈内存分配越大越好吗？</p>
+<p>linux和macOS一般是1024KB，windows一般依赖虚拟内存大小。-Xss size设置</p>
+<p>3、方法内的局部变量是否安全？</p>
+<p>如果这个方法内的局部变量没有逃离方法的作用访问，是线程私有的，那就是安全的。</p>
+<p>但是，如果是局部变量引用了对象，对象是共有的，并逃离方法的作用范围，需要考虑线程安全</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 局部变量的线程安全问题</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">d1_local_var_safe</span> &#123;</span><br><span class="line">    <span class="comment">// 多个线程执行这个方法</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">method1</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">5000</span>; i++) &#123;</span><br><span class="line">            x++;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>4、栈内存溢出：</p>
+<p>栈帧过多导致栈内存溢出，例如方法的递归调用</p>
+<p>栈帧过大导致栈内存溢出。</p>
+<p>5、线程运行诊断：</p>
+<p>（1）CPU占用过高</p>
+<p>可以用 top 命令定位哪个进程对 CPU 的占用过高</p>
+<p>找到进程后，我们想进一步的定位到具体的线程，可以用 ps 命令</p>
+<p>ps H pid,tid,%cpu 可以把当前所有线程的 pid,tid,cpu的信息展示出来<br>使用管道过滤出具体的进程号：ps h -eo pid,tid,%cpu | grep 32655<br>jstack 进程id 命令可以列出Java虚拟机中的所有的 Java 线程</p>
+<p>根据 ps 命令找到的线程号可以在 jstack 中找到对应的线程，里面给出该线程的状态和问题代码行号</p>
+<p>（2）运行时间过长</p>
+<p>可能发生死锁   使用jstack命令查看</p>
+<h5 id="3、本地方法栈（Native-Method-Stack）"><a href="#3、本地方法栈（Native-Method-Stack）" class="headerlink" title="3、本地方法栈（Native Method Stack）"></a>3、本地方法栈（Native Method Stack）</h5><p>本地方法栈的概念很好理解，java底层用了很多c的代码去实现，而其调用c端的方法上都会有native，代表本地方法服务，而本地方法栈就是为其服务的。</p>
+<h5 id="4、堆"><a href="#4、堆" class="headerlink" title="4、堆"></a>4、堆</h5><p>通过new关键字创建对象时，会使用堆内存</p>
+<ul>
+<li>他是线程共享的，堆中对象需要考虑线程安全问题</li>
+<li>堆中有垃圾回收机制</li>
+</ul>
+<p>堆内存溢出：</p>
+<p>不断new新对象，且这些对象不会被回收，一段时间后就会出现堆内存溢出</p>
+<h5 id="5、方法区"><a href="#5、方法区" class="headerlink" title="5、方法区"></a>5、方法区</h5><p>方法区是线程共享的，存储类相关的信息（方法，构造器，特殊方法，运行时常量池等等）</p>
+<p>方法区也是所有<strong>线程共享</strong>的区域，它<strong>存储</strong>了被 jvm 加载的<strong>类型信息、常量、静态变量等数据</strong>。运行时常量池就是方法区的一部分，编译期生成的各种字面量与符号引用就存储在其中。</p>
+<h5 id="6、直接内存"><a href="#6、直接内存" class="headerlink" title="6、直接内存"></a>6、直接内存</h5><p>这部分数据并<strong>不是 JVM 运行时数据区的一部分</strong>，nio 就会使用到直接内存，也可以说<strong>堆外内存</strong>，通常会<strong>配合虚引用一起去使用</strong>，就是为了资源释放，会将堆外内存开辟空间的信息存储到一个队列中，然后GC会去清理这部分空间。堆外内存优势在 IO 操作上，对于网络 IO，使用 Socket 发送数据时，能够节省堆内存到堆外内存的数据拷贝，所以性能更高。看过 Netty 源码的同学应该了解，Netty 使用堆外内存池来实现零拷贝技术。对于磁盘 IO 时，也可以使用内存映射，来提升性能。另外，更重要的几乎不用考虑堆内存烦人的 GC 问题。但是既然是内存。也会受到本机总内存的限制，</p>
+<p>三、JVM内存模型</p>
 
                     
                 </div>
@@ -424,11 +511,11 @@
     <div class="copyright-info-content border-box">
         <div class="copyright-info-top border-box">
             <div class="copyright-post-title border-box text-ellipsis">
-                SQL
+                JVM
             </div>
 
             <div class="copyright-post-link border-box text-ellipsis">
-                2021/09/24/SQL/
+                2024/05/10/JVM/
             </div>
         </div>
 
@@ -444,7 +531,7 @@
                 <div class="type">
                     发布于
                 </div>
-                <div class="content">2021-09-24 20:22</div>
+                <div class="content">2024-05-10 15:44</div>
             </div>
 
 
@@ -477,14 +564,6 @@
                 <div class="post-bottom-tags-and-share border-box">
                     <div>
                         
-                            <ul class="post-tags-box border-box">
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-                                    </li>
-                                
-                            </ul>
-                        
                     </div>
                     <div>
                         
@@ -499,14 +578,14 @@
                             <div class="prev-post">
                                 <a class="prev"
                                    rel="prev"
-                                   href="/2022/09/27/java%E9%87%8D%E8%A6%81%E7%9F%A5%E8%AF%86%E7%82%B9/"
-                                   title="java重要知识点"
+                                   href="/2024/07/23/IOC%E3%80%81AOP/"
+                                   title="IOC、AOP"
                                 >
                                     <span class="left arrow-icon flex-center">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">java重要知识点</span>
+                                        <span class="post-nav-title-item text-ellipsis">IOC、AOP</span>
                                         <span class="post-nav-item">上一篇</span>
                                     </span>
                                 </a>
@@ -516,11 +595,11 @@
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2021/09/24/NetWork/"
-                                   title="NetWork"
+                                   href="/2022/09/27/java%E9%87%8D%E8%A6%81%E7%9F%A5%E8%AF%86%E7%82%B9/"
+                                   title="java重要知识点"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">NetWork</span>
+                                        <span class="post-nav-title-item text-ellipsis">java重要知识点</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
@@ -548,7 +627,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%B0%88%E4%B8%80%E8%B0%88%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="nav-text">一、谈一谈类加载机制？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1%E3%80%81%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A7%A6%E5%8F%91%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="nav-text">1、什么时候触发类加载机制？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-text">2、类加载过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-text">3、类加载器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-text">二、java虚拟机内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1%E3%80%81%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-text">1、程序计数器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2%E3%80%81%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="nav-text">2、虚拟机栈</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3%E3%80%81%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88%EF%BC%88Native-Method-Stack%EF%BC%89"><span class="nav-text">3、本地方法栈（Native Method Stack）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4%E3%80%81%E5%A0%86"><span class="nav-text">4、堆</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5%E3%80%81%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="nav-text">5、方法区</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6%E3%80%81%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98"><span class="nav-text">6、直接内存</span></a></li></ol></li></ol>
     </div>
 </div>
 
@@ -679,7 +758,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%B0%88%E4%B8%80%E8%B0%88%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="nav-text">一、谈一谈类加载机制？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1%E3%80%81%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E8%A7%A6%E5%8F%91%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="nav-text">1、什么时候触发类加载机制？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-text">2、类加载过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-text">3、类加载器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81java%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-text">二、java虚拟机内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1%E3%80%81%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-text">1、程序计数器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2%E3%80%81%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="nav-text">2、虚拟机栈</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3%E3%80%81%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88%EF%BC%88Native-Method-Stack%EF%BC%89"><span class="nav-text">3、本地方法栈（Native Method Stack）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4%E3%80%81%E5%A0%86"><span class="nav-text">4、堆</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5%E3%80%81%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="nav-text">5、方法区</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6%E3%80%81%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98"><span class="nav-text">6、直接内存</span></a></li></ol></li></ol>
     </div>
 </div>
 
